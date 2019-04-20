@@ -16,5 +16,6 @@ public:
     float get_field_size_x();
     float get_field_size_y();
     float get_one_step();
+    float get_dimension();
 };
 #endif //CONSOLE_SNAKE_GAME_FIELD_H

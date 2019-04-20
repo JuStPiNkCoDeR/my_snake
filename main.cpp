@@ -51,11 +51,11 @@ int main() {
         }
 
         window->clear();
+        snake->draw();
         window->draw(top_border);
         window->draw(bottom_border);
         window->draw(left_border);
         window->draw(right_border);
-        snake->draw();
         /// Тик для авто хода змейки
         if (c > 5) {
             snake->move();

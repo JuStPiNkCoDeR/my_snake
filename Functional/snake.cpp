@@ -22,13 +22,15 @@ Snake::Snake(float initial_size, sf::RenderWindow* window, Relative_Designer *de
 }
 
 void Snake::move() {
-    this->log->reset_text(std::to_string(this->parts.front()->get_length()));
-    if (this->parts.size() > 1) {
-        this->parts.back()->pop_back();
-        if (this->parts.back()->get_length() < this->size_of_body_part) { this->parts.pop_back(); }
-        this->parts.at(0)->move_forward();
-    } else {
-        this->parts.at(0)->move_whole_part();
+    if (this->is_alive) {
+        this->log->reset_text(std::to_string(this->parts.front()->get_length()));
+        if (this->parts.size() > 1) {
+            this->parts.back()->pop_back();
+            if (this->parts.back()->get_length() < this->size_of_body_part) { this->parts.pop_back(); }
+            this->parts.at(0)->move_forward();
+        } else {
+            this->parts.at(0)->move_whole_part();
+        }
     }
 }
 

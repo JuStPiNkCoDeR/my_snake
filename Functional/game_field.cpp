@@ -24,3 +24,7 @@ float Field::get_field_size_y() {
 float Field::get_one_step() {
     return this->one_step;
 }
+
+float Field::get_dimension() {
+    return this->dimension;
+}
