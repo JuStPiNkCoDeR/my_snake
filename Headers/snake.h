@@ -32,6 +32,7 @@ private:
     bool is_alive = true;
     Log* log;
     std::deque<Body*> parts;
+    void is_snake_bite_yourself();
 public:
     Snake(float initial_size, sf::RenderWindow* window, Relative_Designer *des, Field *f, Log *log);
     void draw();

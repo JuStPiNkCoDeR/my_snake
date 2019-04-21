@@ -25,6 +25,7 @@ void Snake::move() {
         try {
             if (this->parts.size() > 1) {
                 this->parts.at(0)->move_forward();
+                is_snake_bite_yourself();
                 this->parts.back()->pop_back();
                 if (this->parts.back()->get_length() < this->size_of_body_part) { this->parts.pop_back(); }
             } else {
@@ -142,6 +143,43 @@ void Snake::go_left() {
             y = prev_part->get_y() + (prev_part->get_length() - this->size_of_body_part);
             this->parts.push_front(new Body(x, y, 0.f, this->size_of_body_part,
                                             this->current_direction, this->size_of_body_part, this->field));
+        }
+    }
+}
+
+void Snake::is_snake_bite_yourself() {
+    if (this->current_direction == 2 || this->current_direction == -2) {
+        for (int i = 2; i < this->parts.size(); i++) {
+            if (this->parts[i]->get_dir() == 1 || this->parts[i]->get_dir() == -1) {
+                if ((this->parts.at(0)->get_x() + this->parts.at(0)->get_length() > this->parts[i]->get_x() && this->parts.at(0)->get_x() <= this->parts[i]->get_x() + this->size_of_body_part)
+                        &&
+                        (this->parts.at(0)->get_y() >= this->parts[i]->get_y() && this->parts.at(0)->get_y() <= this->parts[i]->get_y() + this->parts[i]->get_length())
+                        ) {
+                    throw 2;
+                }
+            }
+        }
+    } else if (this->current_direction == 1) {
+        for (int i = 2; i < this->parts.size(); i++) {
+            if (this->parts[i]->get_dir() == 2 || this->parts[i]->get_dir() == -2) {
+                if ((this->parts.at(0)->get_y() >= this->parts[i]->get_y() && this->parts.at(0)->get_y() < this->parts[i]->get_y() + this->size_of_body_part)
+                        &&
+                        (this->parts.at(0)->get_x() >= this->parts[i]->get_x() && this->parts.at(0)->get_x() <= this->parts[i]->get_x() + this->parts[i]->get_length())
+                        ) {
+                    throw  2;
+                }
+            }
+        }
+    } else {
+        for (int i = 2; i < this->parts.size(); i++) {
+            if (this->parts[i]->get_dir() == 2 || this->parts[i]->get_dir() == -2) {
+                if ((this->parts.at(0)->get_y() + this->parts.at(0)->get_length() > this->parts[i]->get_y() && this->parts.at(0)->get_y() + this->parts.at(0)->get_length() <= this->parts[i]->get_y() + this->size_of_body_part)
+                        &&
+                        (this->parts.at(0)->get_x() >= this->parts[i]->get_x() && this->parts.at(0)->get_x() <= this->parts[i]->get_x() + this->parts[i]->get_length())
+                        ) {
+                    throw 2;
+                }
+            }
         }
     }
 }
