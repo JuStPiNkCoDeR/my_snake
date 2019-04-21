@@ -14,22 +14,25 @@ Snake::Snake(float initial_size, sf::RenderWindow* window, Relative_Designer *de
     this->field = f;
     this->size = initial_size;
     this->size_of_body_part = this->field->get_one_step();
-    float x = (this->field->get_field_size_x() / 2) - (initial_size * this->field->get_one_step());
-    float y = (this->field->get_field_size_y() / 2) - this->field->get_one_step();
+    float x = this->field->get_border_coord(-2) + ((50 - initial_size) * this->field->get_one_step());
+    float y = this->field->get_border_coord(1) + (50 * this->field->get_one_step());
     this->window = window;
-    this->parts.push_back(new Body(x, y, this->field->get_one_step() * initial_size, this->field->get_one_step(), this->current_direction, this->size_of_body_part));
-    this->log->show("Hello from snake!", sf::Color::White, 20.f, 10.f);
+    this->parts.push_back(new Body(x, y, this->field->get_one_step() * initial_size, this->field->get_one_step(), this->current_direction, this->size_of_body_part, f));
 }
 
 void Snake::move() {
     if (this->is_alive) {
-        this->log->reset_text(std::to_string(this->parts.front()->get_length()));
-        if (this->parts.size() > 1) {
-            this->parts.back()->pop_back();
-            if (this->parts.back()->get_length() < this->size_of_body_part) { this->parts.pop_back(); }
-            this->parts.at(0)->move_forward();
-        } else {
-            this->parts.at(0)->move_whole_part();
+        try {
+            if (this->parts.size() > 1) {
+                this->parts.at(0)->move_forward();
+                this->parts.back()->pop_back();
+                if (this->parts.back()->get_length() < this->size_of_body_part) { this->parts.pop_back(); }
+            } else {
+                this->parts.at(0)->move_whole_part();
+            }
+        } catch (int &e) {
+            this->is_alive = false;
+            this->log->reset_text("DIED!!!");
         }
     }
 }
@@ -60,7 +63,7 @@ void Snake::confuse_movement() {
 }
 
 bool Snake::is_move_available(int want_to_go) {
-    return this->current_direction * -1 != want_to_go && this->current_direction != want_to_go;
+    return this->current_direction * -1 != want_to_go && this->current_direction != want_to_go && this->parts.front()->get_length() > 0.f;
 }
 
 void Snake::go_up() {
@@ -73,12 +76,12 @@ void Snake::go_up() {
             x = prev_part->get_x() + (prev_part->get_length() - this->size_of_body_part);
             y = prev_part->get_y();
             this->parts.push_front(new Body(x, y, this->size_of_body_part, 0.f,
-                                            this->current_direction, this->size_of_body_part));
+                                            this->current_direction, this->size_of_body_part, this->field));
         } else {
             x = prev_part->get_x();
             y = prev_part->get_y();
             this->parts.push_front(new Body(x, y, this->size_of_body_part, 0.f,
-                                            this->current_direction, this->size_of_body_part));
+                                            this->current_direction, this->size_of_body_part, this->field));
         }
     }
 }
@@ -93,12 +96,12 @@ void Snake::go_right() {
             x = prev_part->get_x() + this->size_of_body_part;
             y = prev_part->get_y();
             this->parts.push_front(new Body(x, y, 0.f, this->size_of_body_part,
-                                            this->current_direction, this->size_of_body_part));
+                                            this->current_direction, this->size_of_body_part, this->field));
         } else {
             x = prev_part->get_x();
             y = prev_part->get_y() + (prev_part->get_length() - this->size_of_body_part);
             this->parts.push_front(new Body(x, y, 0.f, this->size_of_body_part,
-                                            this->current_direction, this->size_of_body_part));
+                                            this->current_direction, this->size_of_body_part, this->field));
         }
     }
 }
@@ -113,12 +116,12 @@ void Snake::go_down() {
             x = prev_part->get_x() + (prev_part->get_length() - this->size_of_body_part);
             y = prev_part->get_y() + this->size_of_body_part;
             this->parts.push_front(new Body(x, y, this->size_of_body_part, 0.f,
-                                            this->current_direction, this->size_of_body_part));
+                                            this->current_direction, this->size_of_body_part, this->field));
         } else {
             x = prev_part->get_x();
             y = prev_part->get_y() + this->size_of_body_part;
             this->parts.push_front(new Body(x, y, this->size_of_body_part, 0.f,
-                                            this->current_direction, this->size_of_body_part));
+                                            this->current_direction, this->size_of_body_part, this->field));
         }
     }
 }
@@ -133,12 +136,12 @@ void Snake::go_left() {
             x = prev_part->get_x();
             y = prev_part->get_y();
             this->parts.push_front(new Body(x, y, 0.f, this->size_of_body_part,
-                                            this->current_direction, this->size_of_body_part));
+                                            this->current_direction, this->size_of_body_part, this->field));
         } else {
             x = prev_part->get_x();
             y = prev_part->get_y() + (prev_part->get_length() - this->size_of_body_part);
             this->parts.push_front(new Body(x, y, 0.f, this->size_of_body_part,
-                                            this->current_direction, this->size_of_body_part));
+                                            this->current_direction, this->size_of_body_part, this->field));
         }
     }
 }
