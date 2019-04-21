@@ -18,7 +18,6 @@ Field::Field(float x, float y, sf::RenderWindow *w, Relative_Designer *des, Log 
     this->field_size_y = y - (2 * des->calculate_actual_y(3.f));
     this->designer = des;
     this->one_step = x / 100;
-    this->log->show(std::to_string(1), sf::Color::White, 20.f, 10.f);
 }
 
 float Field::get_field_size_x() {

@@ -153,7 +153,7 @@ void Snake::is_snake_bite_yourself() {
             if (this->parts[i]->get_dir() == 1 || this->parts[i]->get_dir() == -1) {
                 if ((this->parts.at(0)->get_x() + this->parts.at(0)->get_length() > this->parts[i]->get_x() && this->parts.at(0)->get_x() <= this->parts[i]->get_x() + this->size_of_body_part)
                         &&
-                        (this->parts.at(0)->get_y() >= this->parts[i]->get_y() && this->parts.at(0)->get_y() <= this->parts[i]->get_y() + this->parts[i]->get_length())
+                        (this->parts.at(0)->get_y() > this->parts[i]->get_y() && this->parts.at(0)->get_y() < this->parts[i]->get_y() + this->parts[i]->get_length())
                         ) {
                     throw 2;
                 }
@@ -164,7 +164,7 @@ void Snake::is_snake_bite_yourself() {
             if (this->parts[i]->get_dir() == 2 || this->parts[i]->get_dir() == -2) {
                 if ((this->parts.at(0)->get_y() >= this->parts[i]->get_y() && this->parts.at(0)->get_y() < this->parts[i]->get_y() + this->size_of_body_part)
                         &&
-                        (this->parts.at(0)->get_x() >= this->parts[i]->get_x() && this->parts.at(0)->get_x() <= this->parts[i]->get_x() + this->parts[i]->get_length())
+                        (this->parts.at(0)->get_x() >= this->parts[i]->get_x() && this->parts.at(0)->get_x() < this->parts[i]->get_x() + this->parts[i]->get_length())
                         ) {
                     throw  2;
                 }

@@ -13,6 +13,7 @@ int main() {
     window->setVerticalSyncEnabled(true);
 
     auto* log = new Log(window, "/home/pinkcoder/Fonts/CuteFont-Regular.ttf", 26);
+    log->show("", sf::Color::White, 20.f, 10.f);
 
     Field* field;
     field = new Field(relativeDesigner->get_window_size_x(), relativeDesigner->get_window_size_y(), window, relativeDesigner, log);
@@ -40,7 +41,7 @@ int main() {
         snake->draw();
         field->draw();
         /// Тик для авто хода змейки
-        if (c > 5) {
+        if (c > 2) {
             snake->move();
             c = 0;
         }
