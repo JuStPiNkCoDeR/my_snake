@@ -8,7 +8,7 @@
 #include "../Headers/Logs.h"
 #include "../Headers/Body.h"
 
-Snake::Snake(float initial_size, sf::RenderWindow* window, Relative_Designer *des, Field *f, Log *log) {
+Snake::Snake(int initial_size, sf::RenderWindow* window, Relative_Designer *des, Field *f, Log *log) {
     this->log = log;
     this->designer = des;
     this->field = f;
@@ -18,6 +18,7 @@ Snake::Snake(float initial_size, sf::RenderWindow* window, Relative_Designer *de
     float y = this->field->get_border_coord(1) + (50 * this->field->get_one_step());
     this->window = window;
     this->parts.push_back(new Body(x, y, this->field->get_one_step() * initial_size, this->field->get_one_step(), this->current_direction, this->size_of_body_part, f));
+    this->field->gen_new_apple(this->size);
 }
 
 void Snake::move() {
@@ -26,10 +27,22 @@ void Snake::move() {
             if (this->parts.size() > 1) {
                 this->parts.at(0)->move_forward();
                 is_snake_bite_yourself();
-                this->parts.back()->pop_back();
-                if (this->parts.back()->get_length() < this->size_of_body_part) { this->parts.pop_back(); }
+                if (!this->is_eat_apple()) {
+                    this->parts.back()->pop_back();
+                } else {
+                    this->size++;
+                    this->field->gen_new_apple(this->size);
+                }
+                if (this->parts.back()->get_length() < this->size_of_body_part) {
+                    this->parts.pop_back();
+                }
             } else {
                 this->parts.at(0)->move_whole_part();
+                if (this->is_eat_apple()) {
+                    this->size++;
+                    this->field->gen_new_apple(this->size);
+                    this->parts.at(0)->move_forward();
+                }
             }
         } catch (int &e) {
             this->is_alive = false;
@@ -181,5 +194,34 @@ void Snake::is_snake_bite_yourself() {
                 }
             }
         }
+    }
+}
+
+bool Snake::is_eat_apple() {
+    Body* part = this->parts.at(0);
+    switch (this->parts.at(0)->get_dir()) {
+        case 2: {
+            if ((part->get_x() + part->get_length() > this->field->get_apple()->get_x() && part->get_x() + part->get_length() <= this->field->get_apple()->get_x() + this->field->get_apple()->get_size())
+             && (part->get_y() > this->field->get_apple()->get_y() && part->get_y() + this->size_of_body_part < this->field->get_apple()->get_y() + this->field->get_apple()->get_size())) {
+                return true;
+            }
+        }
+        case -2: {
+            if ((part->get_x() <= this->field->get_apple()->get_x() + this->field->get_apple()->get_size() && part->get_x() >= this->field->get_apple()->get_x())
+            && part->get_y() > this->field->get_apple()->get_y() && part->get_y() + this->size_of_body_part < this->field->get_apple()->get_y() + this->field->get_apple()->get_size())
+                return true;
+        }
+        case 1: {
+            if ((part->get_y() >= this->field->get_apple()->get_y() && part->get_y() <= this->field->get_apple()->get_y() + this->field->get_apple()->get_size())
+            && (part->get_x() > this->field->get_apple()->get_x() && part->get_x() + this->size_of_body_part < this->field->get_apple()->get_x() + this->field->get_apple()->get_size()))
+                return true;
+        }
+        case -1: {
+            if ((part->get_y() + part->get_length() >= this->field->get_apple()->get_y() && part->get_y() + part->get_length() <= this->field->get_apple()->get_y() + this->field->get_apple()->get_size())
+            && (part->get_x() > this->field->get_apple()->get_x() && part->get_x() + this->size_of_body_part < this->field->get_apple()->get_x() + this->field->get_apple()->get_size()))
+                return true;
+        }
+        default:
+            return false;
     }
 }

@@ -18,7 +18,7 @@ int main() {
     Field* field;
     field = new Field(relativeDesigner->get_window_size_x(), relativeDesigner->get_window_size_y(), window, relativeDesigner, log);
 
-    auto* snake = new Snake(50.f, window, relativeDesigner, field, log);
+    auto* snake = new Snake(5, window, relativeDesigner, field, log);
 
     int c = 0;
     while (window->isOpen()) {

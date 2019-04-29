@@ -52,7 +52,32 @@ float Field::get_border_coord(int dir) {
 }
 
 void Field::draw() {
+    this->window->draw(this->apple->get_shape());
     for (auto & wall : this->walls) {
         this->window->draw(wall->get_shape());
     }
+}
+
+void Field::gen_new_apple(int size_of_snake) {
+    delete this->apple;
+    srandom(std::time(nullptr));
+    const int num = 5;
+    int multiplier = size_of_snake / 2;
+    int range = num * multiplier;
+    int res = random() % 100;
+
+    float x, y;
+    int max_steps_for_x, max_steps_for_y;
+    max_steps_for_x = static_cast<int>(this->field_size_x / this->one_step);
+    max_steps_for_y = static_cast<int>(this->field_size_y / this->one_step);
+    float res_x = random() % (max_steps_for_x + 1);
+    float res_y = random() % (max_steps_for_y + 1);
+    x = this->get_border_coord(-2) + (res_x * this->one_step);
+    y = this->get_border_coord(1) + (res_y * this->one_step);
+    if (res > 0 && res <= range) this->apple = new Apple(this->window, "../Textures/simple_apple.jpg", x, y, this->one_step, true);
+    else this->apple = new Apple(this->window, "../Textures/simple_apple.jpg", x, y, this->one_step);
+}
+
+Apple* Field::get_apple() {
+    return this->apple;
 }

@@ -25,7 +25,7 @@ private:
     Relative_Designer* designer;
     Field* field;
     float size_of_body_part;
-    float size;
+    int size;
     int movement_set[4] = {1, 2, -1, -2};
     int current_direction = 2;
     bool is_move_available(int want_to_go);
@@ -33,8 +33,9 @@ private:
     Log* log;
     std::deque<Body*> parts;
     void is_snake_bite_yourself();
+    bool is_eat_apple();
 public:
-    Snake(float initial_size, sf::RenderWindow* window, Relative_Designer *des, Field *f, Log *log);
+    Snake(int initial_size, sf::RenderWindow* window, Relative_Designer *des, Field *f, Log *log);
     void draw();
     void move();
     void confuse_movement();
